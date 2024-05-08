@@ -6,30 +6,56 @@ import time
 
 prompt = """This is a selection template, here are some of the costume parts and labels for the costumes, in the format of type: [Type Attribute 1, Type Attribute 2,...]:
   These vocabulary can only be selected within the following range!
-  Body Parts: [Full body, Upper body, Lower body, Head]
+Fashion Style: {
   Gender: [1boy, 1girl]
   Hairstyle: [Long hair, Short hair, Bun hair, Tir hair, Ponytail hair], and color.
   Posture: [Standing, Sitting, Squatting, Kneeling, Walking]
-  Clothing Style: [T-shirt, Shirt, Sweater, Polo shirt, Under shirt, Halter top, Jacket, Skirt, Shorts, Sweatpants, Jeans]
-  Fabric Types: [Leather, Plush, Wool, Denim Fabric, Lace, Cotton Fabric, Silk Fabric, Knitted Fabric, Velvet fabric, Printed fabric, Jacquard fabric, Down filling]
-  Cloth Color: [Please fill in the sentences according to the ones I gave you]
+  Style: [Vintage style,Minimalist style,Cute style,Luxury style,College style,Elegant style,Sporty style, Floral style, Cute style, Rock style]
+  Silhouette: [Slim silhouette,Short silhouette,Low waistline silhouette,High waist silhouette, Loose silhouette]
+
+  }
+Fashion Craft: {
+  Fabric: [Leather, Plush, Wool, Denim Fabric, Lace, Cotton Fabric, Silk Fabric, Knitted Fabric, Velvet fabric, Printed fabric, Jacquard fabric, Down filling]
+  Color: [Reference the Pantone color chart of current cloth for color judgment]
+  Occasions: [Traveling, Indoors, Workplace, Date, Party, Outdoors]
+  Decorate: [Embroidery, Hot drilling, Sequins, Tie-dye, Patch, Fur, Feathers, Tassel, Bow, Topstitching, Lacing, Printing]
+  Pattern: [Please freely express and output the elements of this type contained in the clothing in this picture，such us "abstract patterns jeans". Don't need write "solid"!]
+
+}
+Whole Attributes: {
+  Type: [Cocktail Dress, Evening Dress, Cheongsam, Chinese Wedding Dress]
   Sleeve Length: [Sleeveless, Short sleeve, Elbow sleeve, Long sleeve]
   Sleeve Subdivision: [Flare sleeve, Cape sleeve, Lantern sleeve, Puff sleeve, Ruffle cuff sleeve, Straight sleeve]
   Collar Height: [Short collar, Collarless, High collar]
-  Collar Subdivision: [Round collar, V-neck collar, Tailored collar, Turn-down collar, Fur collar, Hooded collar, Lotus leaf collar], such as "Turn-down collar Jacket"
+  Collar Subdivision: [Round collar, V-neck collar, Tailored collar, Turn-down collar, Fur collar, Hooded collar, Lotus leaf collar]
+  Front Opening Subdivision: [No front placket, Open front placket, Zipper front placket, Breasted front placket]
+
+}
+Lower Attributes: {
+  Type: [Skirt, Shorts, Sweatpants, Jeans]
   Skirt Length: [Ultra-short skirt, Knee-length skirt, Long-length skirt, Floor-length skirt]
   Pants Length: [Short pants, Capri pants, Long pants]
   Skirt Subdivision: [Pleated Skirt, A-skirt, Fishtail Skirt, Pencil skirt, Slit skirt, Straight Skirt]
+
+}
+Upper Attributes: {
+  Type: [T-shirt, Hoodie, Shirt, Sweater, Cardigan, Polo shirt, Vest, Under shirt, Halter top, Bustier]
+  Sleeve Length: [Sleeveless, Short sleeve, Elbow sleeve, Long sleeve]
+  Sleeve Subdivision: [Flare sleeve, Cape sleeve, Lantern sleeve, Puff sleeve, Ruffle cuff sleeve, Straight sleeve]
+  Collar Height: [Short collar, Collarless, High collar]
+  Collar Subdivision: [Round collar, V-neck collar, Tailored collar, Turn-down collar, Fur collar, Hooded collar, Lotus leaf collar]
   Front Opening Subdivision: [No front placket, Open front placket, Zipper front placket, Breasted front placket]
-  Cloth Silhouette: [Slim silhouette, Oversized silhouette, Mini length, Short silhouette, Ankle length silhouette, Low waistline silhouette, Low waist silhouette, High waist silhouette, H silhouette, Flare line silhouette, Tapered line silhouette, X line silhouette, Hourglass silhouette, Box silhouette, Cocoon silhouette, A-line, Short trapeze, Bell silhouette, Asymmetrical silhouette, Pencil silhouette, Multi-layer silhouette, Symmetrical silhouette, Loose silhouette, Crop top silhouette]
-  Occasions and Style Feel: [Traveling, Indoors, Workplace, Date, Party, Outdoors]
-  Style: [Y2K style, Baroque style, Bohemian style, Animal print style, Vintage style, Gothic style, Workwear style, Navy style, Korean style, Floral style, Wedding style, Minimalist style, Street fashion style, Military style, Cute style, Loose style, Rococo style, Ethnic style, Party style, Punk style, Fur style, Japanese style, Racing style, Business style, Luxury style, Floral style, Countryside style, Casual style, College style, Rock style, Italian style, British style, Elegant style, Sporty style]
-  Craft Elements: [Embroidery, Hot drilling, Sequins, Tie-dye, Patch, Fur, Feathers, Tassel, Bow, Topstitching, Lacing, Printing]
-  Pattern Texture: [Please fill in the sentences according to the ones I gave you, For example: Abstract Patterns]
-  Shooting Angle: [View from front, View from side, View from back, View from outside]
-  Shooting Format: [Close-up shot, Cowboy shot, Wide shot, Aerial View, Dutch Angle]
-  Image Range: [Head out of frame, Feet out of frame]
+
+}
+Image Dimension: {
+  Body Parts: [Full body, Upper body, Lower body, Head]
+  Character Details: [Write all the details about character, such as selfie, expressions, emotion]
   Number of Characters: [Solo]
+  Character Sighting:[Looking at viewer, Looking to the side, Looking away, Looking back, Looking up, Looking down]
+  Image Range: [Head out of frame, Feet out of frame]
+  Shooting Angle: [View from front, View from side, View from back, View from outside]
+  Shooting Format: [Close-up shot, Cowboy shot, Wide shot, Aerial View, Dutch Angle] 
+}
   
 Next, based on the description of clothing I gave at the end of this paragraph, match and select words in each of the above categories, and eventually give me the major category and selected subcategories, each on a separate line. You need to output all the tag categories. Please output all categories. If you come across something you can't recognise, output "-----". 
 The vocabulary must be the same as I wrote, no other words or brackets!!
@@ -39,9 +65,15 @@ Don't fill in the elements of the sentence that aren't deciphered on your own, I
 Categories that do not exist in a sentence cannot be created.
 Write content in the same category on the same line.
 The output format is as follows:
-Gender: 1girl
-Season: Spring
-Cloth color: Yellow skirt, White jacket
+Image Dimension_Body parts: Whole body
+Fashion Style_Gender: 1girl
+Fashion Style_Hairstyle: Short hair, Brown hair
+Upper Attribute_Type: T-shirt, Hoodie
+Lower Attribute_Type: Skirt
+Color: White T-shirt, Silver Hoodie, White Skirt
+Upper Attribute_Collar Height: High collar T-shirt, Short collar Hoodie
+Silhouette: Slim silhouette
+
 ...
 
 Next is a one sentence description of the garment: {}"""
